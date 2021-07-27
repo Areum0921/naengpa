@@ -1,0 +1,62 @@
+<!-- 레시피 등록 form -->
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h4 class="my-3">레시피 등록</h4>
+
+    <form method="post" enctype="multipart/form-data" class="post-form" action="{% url 'naengpa:recipe_create' %}">
+        {% csrf_token %}
+        <!-- 오류발생시 -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                아래 항목은 반드시 입력해야 합니다.
+                {% for field in form %}
+                    {% if field.errors %}
+                <li> {{ field.label }}</li>
+                {{ filed.errors }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- 썸네일, 요리이름, 조리시간, 난이도, 재료, 내용 -->
+        <div class="form-group">
+            <label for="thumbnail">썸네일 이미지</label><br>
+            <input type="file" name="thumbnail"
+                   id="thumbnail" value="{{ form.thumbnail.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" class="form-control" name="name"
+                   id="name" value="{{ form.name.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="time">조리시간</label>
+            <input type="number" class="form-control" name="time"
+                   id="time" value="{{ form.time.value|default_if_none:'' }}">
+
+        </div>
+        <div class="form-group">
+            <label for="difficulty">난이도</label>
+            <input type="number" class="form-control" name="difficulty"
+                   id="difficulty" value="{{ form.difficulty.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="need_ingredient">재료</label>
+            <input type="text" class="form-control" name="need_ingredient"
+                   id="need_ingredient" value="{{ form.need_ingredient.value|default_if_none:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="content">요리방법</label>
+            <textarea class="form-control" name="content"
+                      id="content" value="{{ form.content.value|default_if_none:'' }}"></textarea>
+        </div>
+
+
+        <center><button class="btn btn-info">레시피 등록하기</button></center>
+
+    </form>
+</div>
+
+{% endblock %}

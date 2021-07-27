@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+{% extends "base.html" %}
+    {% block content %}
+    <div class="container my-3">
+    <h1>{{ recipe.name }}</h1>
+        {{ recipe.recipe_list }}
+    <div>{{ recipe.content }}</div>
+
+    <h4>{{ recipe.review_set.count }}개의 평가</h4>
+    <div>
+        {% for review in recipe.review_set.all %}
+            {{ review.content}} ☆ : {{ review.score }}<br>
+
+        {% endfor %}
+    </div>
+        <form action="{% url 'naengpa:review_create' recipe.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="content" id="content" rows="10"></textarea><br>
+            레시피 점수 ☆ :
+            <select name="score">
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+
+            </select>
+            <input type="submit" value="평가하기">
+        </form>
+    </div>
+{% endblock %}
+
+</html>

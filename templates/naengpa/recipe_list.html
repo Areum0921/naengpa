@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>냉파</title>
+
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <div>
+        <center><h1>냉장고 파먹기</h1></center>
+    </div>
+
+    <div class="container my-3">
+        <div class="row justify-content-end">
+            <div class="col-4 input-group">
+                <input type="text" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn" type="button" id="btn_search">검색</button>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <div>
+        <table class="table table-hover">
+            <thead>
+                <th></th>
+                <th>이름</th>
+                <th>난이도</th>
+                <th>조리시간(분)</th>
+                <th>재료</th>
+                <th>평점</th>
+            </thead>
+
+    {% if recipe_list %}
+        {% for recipe in recipe_list %}
+        <tr style="text-align:center; line-height: 500%;">
+            <td width="10%">{% if recipe.thumbnail %}
+                <img src = "{{ recipe.thumbnail.url }}" alt="" height="100" width="100">
+                {% endif %}
+            </td>
+            <td><a href="{% url 'naengpa:detail' recipe.id %}">{{ recipe.name }}</a></td>
+            <td>{{ recipe.difficulty }}</td>
+            <td>{{ recipe.time }}</td>
+            <td>{{ recipe.need_ingredient }}</td>
+            <td>{% if recipe.review_set.count > 0 %}
+                {{ recipe.score_avg }}/5.0
+                <span class="text-info .-danger middel ml-2" >({{ recipe.reviews_count }})</span>
+                {% else %}
+                0/5.0
+                <span class="text-info .-danger middel ml-2" >(0)
+
+            </td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% else %}
+            <td><center> 등록된 레시피가 없습니다.</center></td>
+
+    {% endif %}
+        </table>
+        </div>
+        <center><a href="{% url 'naengpa:recipe_create'%}" class="btn btn-info">레시피 등록하기</a>
+        </center>
+    </div>
+{% endblock %}
+
+</body>
+</html>
+
+<!-- p태그에 있는 title값 넣어주기
+# id == app인 tag 내부의 title에 data값 전달 -->
+<script>
+    new Vue({
+        delimiters:['[[',']]'],
+        el : '#app',
+        data : {
+            title : '냉장고를 파먹어보자',
+            }
+        })
+</script>
