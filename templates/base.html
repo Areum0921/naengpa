@@ -9,11 +9,24 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
     <!-- naengpa CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!-- JQuery JS -->
+    <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap.min.js' %}"></script>
     <title>naeng-pa</title>
 </head>
 <body>
+
+{% include "navbar.html" %}
+
+<div>
+        <center><h1>냉장고 파먹기</h1></center>
+</div>
+
+
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 {% block content %}
+
 {% endblock %}
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
 </body>

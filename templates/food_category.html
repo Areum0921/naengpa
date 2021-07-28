@@ -1,10 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<form action="{% url 'naengpa:index' %}" method="POST">
+    {% csrf_token %}
+    <right>
+      <div class="btn-group-toggle border-bottom py-3">
+      <input type="checkbox" class="btn-check" name="category[]" id="ca1" value="ko" autocomplete="on">
+      <label class="btn btn-primary mr-2" for="ca1">  한 식  </label>
+      <input type="checkbox" class="btn-check" name="category[]" id="ca2" value="west" autocomplete="on">
+      <label class="btn btn-primary mr-2" for="ca2">양 식</label>
+      <input type="checkbox" class="btn-check" name="category[]" id="ca3" value="jp">
+      <label class="btn btn-primary mr-2" for="ca3">일 식</label>
+      <input type="checkbox" class="btn-check" name="category[]" id="ca4" value="cn">
+      <label class="btn btn-primary mr-2" for="ca4">중 식</label>
+
+
+    <button type="submit" class="btn btn-success">카테고리 검색하기</button>
+    </div>
+    </right>
+
+
+  <!--
+  <ul id ="myList">
+    <li id ="myId1">first<input type="hidden" name="mylist[]" value="myid1"> </li>
+    <li id ="myId2">first<input type="hidden" name="mylist[]" value="myid2"> </li>
+  </ul>
+  -->
+
+</form>
+
+<!--체크된 값만 가져오기-->
+<script>
+  function test(){
+    var obj = document.getElementsByName("category[]").length;
+
+    for(var i=0; i<obj;i++){
+      if(document.getElementsByName("category[]")[i].checked == true){
+      alert(document.getElementsByName("category[]")[i].value);
+      }
+    }
+  }
+
+</script>
