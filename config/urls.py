@@ -15,10 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import naengpa.urls
+from naengpa import views
+from django.conf.urls import url
+
+from django.contrib.auth.decorators import login_required # 로그인 상태여야한다.
+from  django.views.decorators.cache import never_cache
+
+from django.conf.urls.static import static # 정적파일 제공
+from django.conf import settings # settings.py에 설정한 미디어 경로 사용
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('naengpa.urls')),
-
+    path('naengpa/',include('naengpa.urls')),
+    path('common/',include('common.urls')),
+    path('',views.index, name='index'), # 기본주소
+    path('ckeditor/',include('ckeditor_uploader.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

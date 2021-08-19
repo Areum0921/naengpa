@@ -2,3 +2,6 @@
 key.py
 *.pyc
 __pycache__
+logs
+mysql-data
+media

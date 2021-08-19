@@ -9,11 +9,31 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
     <!-- naengpa CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!-- JQuery JS -->
+    <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <!-- 자바스크립트 Start -->
+    {% block script %}
+    {% endblock %}
+    <!-- 자바스크립트 End -->
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <title>naeng-pa</title>
 </head>
 <body>
+
+{% include "navbar.html" %}
+
+<div class="main-header">
+    <center><h1><a href="{% url 'naengpa:index' %}" style="color:#17a2b8">냉장고 파먹기</a></h1></center>
+</div>
+
+
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 {% block content %}
+
 {% endblock %}
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
 </body>

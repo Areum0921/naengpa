@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from .key import KEY, password
+from .key import *
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,7 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
+    'common.apps.CommonConfig', # 앱 common (공통사용)
     'naengpa.apps.NaengpaConfig',
     'rest_framework',
     'django.contrib.admin',
@@ -43,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'imagekit', # 이미지 재 가공
+    'ckeditor', # 에디터
+    'ckeditor_uploader',
+
 
 ]
 """
@@ -97,6 +101,12 @@ DATABASES = {
     }
 }
 
+EMAIL_BACKEND = EMAIL['EMAIL_BACKEND']
+EMAIL_USE_TLS = EMAIL['EMAIL_USE_TLS']
+EMAIL_PORT = EMAIL['EMAIL_PORT']
+EMAIL_HOST = EMAIL['EMAIL_HOST']
+EMAIL_HOST_USER = EMAIL['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = EMAIL['EMAIL_HOST_PASSWORD']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -130,7 +140,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+LOGIN_REDIRECT_URL = '/' # 로그인 성공시 이동
+LOGOUT_REDIRECT_URL = '/' # 로그아웃시 이동
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -146,3 +157,21 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend'] # is_active계정 유효성 에러문구
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'width': '100%',
+        'height': '550',
+
+        # 'toolbar_Custom': [
+        #     ['Bold', 'Italic', 'Underline'],
+        #     ['NumberedList', 'BulletedList'],
+        # ],
+    }
+}

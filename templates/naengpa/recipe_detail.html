@@ -1,38 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+
 {% extends "base.html" %}
-    {% block content %}
+{% block content %}
+
     <div class="container my-3">
-    <h1>{{ recipe.name }}</h1>
-        {{ recipe.recipe_list }}
-    <div>{{ recipe.content }}</div>
-
-    <h4>{{ recipe.review_set.count }}개의 평가</h4>
-    <div>
-        {% for review in recipe.review_set.all %}
-            {{ review.content}} ☆ : {{ review.score }}<br>
-
-        {% endfor %}
+        {% include "search_box.html" %}
+        <!-- 사용자오류 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
     </div>
-        <form action="{% url 'naengpa:review_create' recipe.id %}" method="post">
+    {% endif %}
+    <center><img src = "{{ recipe.thumbnail.url }}">
+    <h1 class="border-bottom py-3" >{{ recipe.name }}</h1></center>
+    <div class="card my-2">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">
+                {{ recipe.content | safe }}
+            </div>
+
+        </div>
+
+    </div>
+    {% if request.user == recipe.writer %}
+                <div class="row justify-content-end">
+                    <a href="{% url 'naengpa:recipe_modify' recipe.id  %}"
+                        class="btn btn-sm btn-outline-secondary" style="width:70px; height:30px; margin-right:20px; " >수정</a>
+                    <a href="#" class="delete btn btn-sm btn-outline-secondary" style="width : 70px; height:30px; margin-right:20px;"
+                    data-uri="{% url 'naengpa:recipe_delete' recipe.id %}">삭제</a>
+                </div>
+                {% endif %}
+
+    <h4 class="border-bottom my-4 py-2">{{ recipe.review_set.count }}개의 평가</h4>
+    {% for review in recipe.review_set.all %}
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-start">
+                    ☆ : {{ review.score }}
+                </div>
+                <br>
+                <div class="card-text" style="white-space: pre-line;">
+                    {{ review.content}}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+        <form action="{% url 'naengpa:review_create' recipe.id %}" method="post" class="my-3">
             {% csrf_token %}
-            <textarea name="content" id="content" rows="10"></textarea><br>
+            <div class="form-group">
+            <textarea name="content" id="content" class="form-control" rows="10"></textarea><br>
             레시피 점수 ☆ :
-            <select name="score">
+            <select name="score" >
                 <option value=1>1</option>
                 <option value=2>2</option>
                 <option value=3>3</option>
                 <option value=4>4</option>
                 <option value=5>5</option>
-
             </select>
+
             <input type="submit" value="평가하기">
+                </div>
         </form>
     </div>
 {% endblock %}
-
-</html>
+{% block script %}
+<script type="text/javascript">
+    $(document).ready(function(){
+    $('.delete').on('click', function() {
+        if(confirm("삭제를 진행하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}
