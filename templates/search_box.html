@@ -1,10 +1,19 @@
 <!-- 검색창 -->
         <div class="row justify-content-end">
-            <div class="col-3 input-group">
-                <input type="text" class="form-control">
-                <div class="input-group-append">
-                    <button class="btn" type="button" id="btn_search">검색</button>
+
+            <div class="col-4 input-group">
+                <select class="form-control sr" style="width:50px">
+                    <option value="name" {% if sr == 'name' %}selected{% endif %}>요리 이름</option>
+                    <option value="need_ingredient" {% if sr == 'need_ingredient' %}selected{% endif %}>재료</option>
+                    <option value="ingredient" {% if sr == 'ingredient' %}selected{% endif %}>재료 (일부포함)</option>
+                </select>
+                <span class="input-group-append">
+                    <input type="text" class="form-control kw" value="{{ kw|default_if_none:'' }}">
+                </span>
                 </div>
-            </div>
+                <span class="input-group-append">
+                    <button class="btn btn-outline-info" type="button" id="btn_search">검색</button>
+                </span>
         </div>
         <br>
+

@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  django-db:
+    image: mysql:5.7
+    container_name: naengpa-django
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mysql
+      MYSQL_ROOT_USER: root
+      MYSQL_PASSWORD: 2014
+    volumes:
+      - C:\np_projects\np\mysql-data:/var/lib/mysql
+    platform: linux/amd64

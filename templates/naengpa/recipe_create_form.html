@@ -1,30 +1,24 @@
 <!-- 레시피 등록 form -->
-
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
     <h4 class="my-3">레시피 등록</h4>
-
-    <form method="post" enctype="multipart/form-data" class="post-form" action="{% url 'naengpa:recipe_create' %}">
+    <form method="post" enctype="multipart/form-data" class="post-form"> <!-- action 미설정시 현재 url이 디폴트 action -->
         {% csrf_token %}
+        {{ form.media }}
         <!-- 오류발생시 -->
-        {% if form.errors %}
-            <div class="alert alert-danger" role="alert">
-                아래 항목은 반드시 입력해야 합니다.
-                {% for field in form %}
-                    {% if field.errors %}
-                <li> {{ field.label }}</li>
-                {{ filed.errors }}
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endif %}
+        {% include 'error_form.html'%}
         <!-- 썸네일, 요리이름, 조리시간, 난이도, 재료, 내용 -->
         <div class="form-group">
-            <label for="thumbnail">썸네일 이미지</label><br>
-            <input type="file" name="thumbnail"
-                   id="thumbnail" value="{{ form.thumbnail.value|default_if_none:'' }}">
+            {% if form.thumbnail.value.url %} <!-- 사진이 db에 저장되어있을때 -->
+            <div>현재 썸네일 이미지</div>
+             <img src="{{ form.thumbnail.value.url }}" alt="" width="150px" height="120px"><br>
+
+
+            {% endif %}
+            {{ form.thumbnail }}
         </div>
+
         <div class="form-group">
             <label for="name">이름</label>
             <input type="text" class="form-control" name="name"
@@ -32,28 +26,108 @@
         </div>
 
         <div class="form-group">
+            {% if form.category.value %}
+                카테고리 :
+                {% if form.category.value == 'west' %}
+                <select name="category" >
+                <option value='ko'>한 식</option>
+                <option value='west' selected>양 식</option>
+                <option value='jp' >일 식</option>
+                <option value='cn' >중 식</option>
+                </select>
+                {% elif form.category.value == 'jp' %}
+                <select name="category" >
+                <option value='ko'>한 식</option>
+                <option value='west' >양 식</option>
+                <option value='jp' selected>일 식</option>
+                <option value='cn' >중 식</option>
+                </select>
+                {% elif form.category.value == 'cn' %}
+                <select name="category" >
+                <option value='ko'>한 식</option>
+                <option value='west' >양 식</option>
+                <option value='jp' >일 식</option>
+                <option value='cn' selected>중 식</option>
+                </select>
+                {% elif form.category.value == 'ko' %}
+                <select name="category" >
+                <option value='ko' selected>한 식</option>
+                <option value='west' >양 식</option>
+                <option value='jp' >일 식</option>
+                <option value='cn'>중 식</option>
+                </select>
+                {% endif %}
+            {% else %}
             카테고리 :
             <select name="category" >
+                <option value="" selected>선 택</option>
                 <option value='ko'>한 식</option>
                 <option value='west'>양 식</option>
                 <option value='jp'>일 식</option>
                 <option value='cn'>중 식</option>
             </select>
-            <!--
-            <label for="time">카테고리</label>
-            <input type="text" class="form-control" name="category"
-                   id="category" value="{{ form.category.value|default_if_none:'' }}">
-            -->
+            {% endif %}
         </div>
         <div class="form-group">
-            <label for="time">조리시간</label>
+            <label for="time">조리시간 (분)</label>
             <input type="text" class="form-control" name="time"
                    id="time" value="{{ form.time.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
-            <label for="difficulty">난이도</label>
-            <input type="number" class="form-control" name="difficulty"
-                   id="difficulty" value="{{ form.difficulty.value|default_if_none:'' }}">
+            <label for="time">난이도</label>
+            {% if form.difficulty.value %}
+                {% if form.difficulty.value == 2 %}
+                <select name="difficulty" >
+                    <option value=1>Lv1</option>
+                    <option value=2 selected>Lv2</option>
+                    <option value=3>Lv3</option>
+                    <option value=4>Lv4</option>
+                    <option value=5>Lv5</option>
+                </select>
+                {% elif form.difficulty.value == 3 %}
+                <select name="difficulty" >
+                    <option value=1>Lv1</option>
+                    <option value=2>Lv2</option>
+                    <option value=3 selected>Lv3</option>
+                    <option value=4>Lv4</option>
+                    <option value=5>Lv5</option>
+                </select>
+                {% elif form.difficulty.value == 4 %}
+                <select name="difficulty" >
+                    <option value=1>Lv1</option>
+                    <option value=2>Lv2</option>
+                    <option value=3>Lv3</option>
+                    <option value=4 selected>Lv4</option>
+                    <option value=5>Lv5</option>
+                </select>
+                {% elif form.difficulty.value == 5 %}
+                <select name="difficulty" >
+                    <option value=1>Lv1</option>
+                    <option value=2>Lv2</option>
+                    <option value=3>Lv3</option>
+                    <option value=4>Lv4</option>
+                    <option value=5 selected>Lv5</option>
+                </select>
+            {% elif form.difficulty.value == 1 %}
+                <select name="difficulty" >
+                    <option value=1 selected>Lv1</option>
+                    <option value=2>Lv2</option>
+                    <option value=3>Lv3</option>
+                    <option value=4>Lv4</option>
+                    <option value=5>Lv5</option>
+                </select>
+
+                {% endif %}
+            {% else %}
+                <select name="difficulty" >
+                    <option value=''>선 택</option>
+                    <option value=1>Lv1</option>
+                    <option value=2>Lv2</option>
+                    <option value=3>Lv3</option>
+                    <option value=4>Lv4</option>
+                    <option value=5>Lv5</option>
+                </select>
+            {% endif %}
         </div>
         <div class="form-group">
             <label for="need_ingredient">재료</label>
@@ -62,12 +136,11 @@
         </div>
 
         <div class="form-group">
-            <label for="content">요리방법</label>
-            <textarea class="form-control" name="content"
-                      id="content" value="{{ form.content.value|default_if_none:'' }}"></textarea>
+            요리 방법<br><br>
+            {{ form.content | safe }}
         </div>
 
-        <center><button class="btn btn-info">레시피 등록하기</button></center>
+        <center><button class="btn btn-info">레시피 저장하기</button></center>
 
     </form>
 </div>

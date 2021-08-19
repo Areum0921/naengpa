@@ -1,30 +1,40 @@
 <form action="{% url 'naengpa:index' %}" method="POST">
     {% csrf_token %}
-    <right>
-      <div class="btn-group-toggle border-bottom py-3">
-      <input type="checkbox" class="btn-check" name="category[]" id="ca1" value="ko" autocomplete="on">
-      <label class="btn btn-primary mr-2" for="ca1">  한 식  </label>
-      <input type="checkbox" class="btn-check" name="category[]" id="ca2" value="west" autocomplete="on">
-      <label class="btn btn-primary mr-2" for="ca2">양 식</label>
-      <input type="checkbox" class="btn-check" name="category[]" id="ca3" value="jp">
-      <label class="btn btn-primary mr-2" for="ca3">일 식</label>
-      <input type="checkbox" class="btn-check" name="category[]" id="ca4" value="cn">
-      <label class="btn btn-primary mr-2" for="ca4">중 식</label>
+    <div class="py-3">
+            <input type="checkbox" class="btn-check" name="category[]" id="ca1" value="ko" style="margin:5px">한식
+            <input type="checkbox" class="btn-check" name="category[]" id="ca2" value="west" style="margin:5px">양식
+            <input type="checkbox" class="btn-check" name="category[]" id="ca3" value="jp" style="margin:5px">일식
+            <input type="checkbox" class="btn-check" name="category[]" id="ca4" value="cn" style="margin:5px">중식
 
-
-    <button type="submit" class="btn btn-success">카테고리 검색하기</button>
+    <button type="submit" class="btn btn-outline-info" style="margin-left:10px;">카테고리 검색하기</button>
     </div>
-    </right>
-
+</form>
 
   <!--
   <ul id ="myList">
     <li id ="myId1">first<input type="hidden" name="mylist[]" value="myid1"> </li>
     <li id ="myId2">first<input type="hidden" name="mylist[]" value="myid2"> </li>
   </ul>
+
+  <div class="btn-group-toggle py-3 row justify-content-end">
+        <label class="btn btn-primary mr-2" for="ca1" data-toggle="button">
+            <input type="checkbox" class="btn-check" name="category[]" id="ca1" value="ko" autocomplete="on">한 식
+        </label>
+        <label class="btn btn-primary mr-2" for="ca2" data-toggle="button">
+            <input type="checkbox" class="btn-check" name="category[]" id="ca2" value="west" autocomplete="on">양 식
+        </label>
+        <label class="btn btn-primary mr-2" for="ca3" data-toggle="button">
+            <input type="checkbox" class="btn-check" name="category[]" id="ca3" value="jp">일 식
+        </label>
+        <label class="btn btn-primary mr-2" for="ca4" data-toggle="button">
+            <input type="checkbox" class="btn-check" name="category[]" id="ca4" value="cn">중 식
+        </label>
+
+    <button type="submit" class="btn btn-success">카테고리 검색하기</button>
+    </div>
   -->
 
-</form>
+
 
 <!--체크된 값만 가져오기-->
 <script>

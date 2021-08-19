@@ -9,13 +9,62 @@
 <body>
     {% extends 'base.html' %}
     {% block content %}
-
     <div class="container my-3">
         {% include "search_box.html" %}
         {% include "food_category.html" %}
         {{ selected_cate }}
         <div>
-        <table class="table table-hover border-bottom">
+            {% if recipe_list %}
+                {% for recipe in recipe_list %}
+        <table class="table" border="2px" bordercolor="#979797" rules="none" width="500px" height="250px" border-collapse="collapse" >
+                    <tr>
+                        <td width="150px" rowspan="3" ><img src = "{{ recipe.thumbnail.url }}" alt="" width="100%" height="200px" ></td>
+                        <td border-bottom="10px" width="240px" style='word-break:break-all;'>{% if recipe.difficulty == 5 %}
+                            <span style="color:red"> <b>Lv5</b></span>
+                            {% elif recipe.difficulty == 4 %}
+                            <span style="color:#9400D3"><b>Lv4</b></span>
+                            {% elif recipe.difficulty == 3 %}
+                            <span style="color:#FFD700"><b>Lv3</b></span>
+                            {% elif recipe.difficulty == 2 %}
+                            <span style="color:blue"><b>Lv2</b></span>
+                            {% elif recipe.difficulty == 1 %}
+                            <span style="color:green"><b>Lv1</b></span>
+                            {% endif %}
+                            <a href="{% url 'naengpa:detail' recipe.id %}" style="font-size:25px; color:black;"><b>{{ recipe.name }}</b></a> </td>
+                        <td width="180px">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{ recipe.writer.username}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{ recipe.need_ingredient }}</td>
+                    </tr>
+                    <tr>
+                        <td width="180px">
+                            <center>{% if recipe.review_set.count > 0 %}
+                                {{ recipe.score_avg }}/5.0
+                            <span class="text-info .-danger middel ml-2" >({{ recipe.reviews_count }})</span>
+                            {% else %}
+                            0/5.0
+                                <span class="text-info .-danger middel ml-2" >(0)</span></center></td>
+                        <td  colspan="2">
+                            {% if recipe.category == 'ko' %}
+                            한식
+                            {% elif recipe.category == 'jp' %}
+                            일식
+                            {% elif recipe.category == 'cn' %}
+                            중식
+                            {% elif recipe.category == 'west' %}
+                            양식
+                            {% endif %}
+                            </td>
+                    </tr>
+                    {% endif %}
+                </table>
+                {% endfor %}
+            {% endif %}
+            <!--
             <thead>
                 <th></th>
                 <th>이름</th>
@@ -48,62 +97,81 @@
         {% endfor %}
         </tr>
     {% else %}
-            <td><center> 등록된 레시피가 없습니다.</center></td>
+            <td><center> 레시피가 없습니다.</center></td>
     {% endif %}
-        </table>
+    -->
+
+        <!-- 페이징 처리 -->
         <ul class="pagination justify-content-center">
             {% if recipe_list.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ recipe_list.previous_page_number }}">이전</a>
+                <a class="page-link" data-page="{{ recipe_list.previous_page_number }}" href="#" onclick="return false;">이전</a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#" onclick="return false;">이전</a>
             </li>
             {% endif %}
-
             <!-- 페이지 리스트 -->
             {% for page_number in recipe_list.paginator.page_range %}
-                {% if page_number == recipe_list.number %}
-                <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-                </li>
+                {% if page_number >= recipe_list.number|add:-5 and page_number <= recipe_list.number|add:5 %}
+                    {% if page_number == recipe_list.number %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" data-page="{{ page_number }}" href="#" onclick="return false;">{{ page_number }}</a>
+                    </li>
                 {% else %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                    <a class="page-link" data-page="{{ page_number }}" href="#" onclick="return false;">{{ page_number }}</a>
                 </li>
                 {% endif %}
+            {% endif %}
             {% endfor %}
             {% if recipe_list.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ recipe_list.next_page_number }}">다음</a>
+                <a class="page-link" data-page="{{ recipe_list.next_page_number }}" href="#" onclick="return false;">다음</a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#" onclick="return false;">다음</a>
             </li>
             {% endif %}
         </ul>
         </div>
 
-        <center>
+        <div class="row justify-content-end" style="margin:10px">
             <a href="{% url 'naengpa:recipe_create'%}" class="btn btn-info">레시피 등록하기</a>
-        </center>
+        </div>
     </div>
 
     </body>
 </html>
-<form id="checkForm" method="post" action="{% url 'naengpa:index' %}">
-        <input type="hidden" id="category" name="category" value="{{ category }}">
+
+
+<form id="searchForm" method="get" action="{% url 'index' %}">
+    <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+    <input type="hidden" id="page" name="page" value="{{ page }}">
+    <input type="hidden" id="sr" name="sr" value="{{ sr }}">
 </form>
 {% endblock %}
 {% block script %}
-<script type="text/javascript">
-%(document).ready(function(){
-    $(".category").on('change',function() {
-        $("#category").val($(this).val());
-        $("#checkForm").submit();
-        });
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".page-link").on('click', function() {
+        $("#page").val($(this).data("page"));
+        $("#searchForm").submit();
+    });
+    $("#btn_search").on('click', function() {
+        $("#kw").val($(".kw").val());
+        $("#page").val(1);  // 검색버튼을 클릭할 경우 1페이지부터 조회
+        $("#searchForm").submit();
+    });
+    $(".sr").on('change', function() {
+        $("#sr").val($(this).val());
+        $("#page").val(1);
+        $("#searchForm").submit();
+    });
+
+
 
 });
 </script>
